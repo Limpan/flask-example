@@ -9,6 +9,10 @@ redis = FlaskRedis()
 
 
 def create_app(config_name):
+    """Application factory, see docs_.
+
+    .. _docs: http://flask.pocoo.org/docs/0.10/patterns/appfactories/
+    """
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)

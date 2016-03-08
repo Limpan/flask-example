@@ -9,7 +9,7 @@ def cli():  # NOQA
     pass
 
 
-@click.command()
+@cli.command()
 @click.option('--coverage', 'with_coverage', is_flag=True)
 @click.option('--no-html', is_flag=True)
 @click.option('--no-report', is_flag=True)
@@ -47,7 +47,7 @@ def test(with_coverage, no_html, no_report):
     raise SystemExit(exit_code)
 
 
-@click.command()
+@cli.command()
 @click.option('--all', is_flag=True)
 @click.option('--stats', is_flag=True)
 def lint(all, stats):
@@ -68,8 +68,6 @@ def lint(all, stats):
     flake8.main()
 
 
-cli.add_command(test)
-cli.add_command(lint)
 
 if __name__ == "__main__":
     cli()

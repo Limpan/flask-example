@@ -5,4 +5,5 @@ from .. import redis
 
 @main.route('/')
 def index():
+    """Default application route."""
     return render_template('index.html')
