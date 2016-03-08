@@ -68,6 +68,18 @@ def lint(all, stats):
     flake8.main()
 
 
+# TODO: Implement manage.py runserver
+
+
+# TODO: Implement manage.py shell
+
+
+try:
+    from database import db
+    cli.add_command(db)
+except ImportError:
+    pass
+
 
 if __name__ == "__main__":
     cli()
