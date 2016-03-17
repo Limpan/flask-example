@@ -6,7 +6,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY' or 'very hard to guess string')
 
-    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://localhost/0'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgresql/example'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod
     def init_app(app):

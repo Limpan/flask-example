@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect
 from . import main
-from .. import redis
+from .. import db
 
 
 @main.route('/')
