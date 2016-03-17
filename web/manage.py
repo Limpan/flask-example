@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import click
 
+
 APP_FOLDER = 'app'
 
 
@@ -69,9 +70,19 @@ def lint(all, stats):
 
 
 # TODO: Implement manage.py runserver
+@cli.command()
+def runserver():
+    import os
+    from app import create_app
+
+    app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+    app.run()
 
 
 # TODO: Implement manage.py shell
+@cli.command()
+def shell():
+    pass
 
 
 try:
