@@ -1,0 +1,12 @@
+web:
+  environment:
+    - FLASK_CONFIG=development
+    - SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://postgres:secretpassword@postgresql/postgres
+  volumes:
+    - ./web:/usr/src/app
+
+postgresql:
+  environment:
+    - POSTGRES_PASSWORD=secretpassword
+    - POSTGRES_USER=postgres
+#    - POSTGRES_DB=flaskexample

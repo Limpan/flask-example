@@ -3,4 +3,9 @@
 {% block container %}
 <h1>Example application</h1>
 <p>Maybe we should do something?</p>
+
+{% for user in users %}
+<p>{{ user.nickname }}</p>
+{% endfor %}
+
 {% endblock %}
