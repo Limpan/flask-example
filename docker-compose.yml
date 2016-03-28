@@ -21,16 +21,10 @@ nginx:
   links:
     - web:web
 
-data:
-  restart: "no"
-  image: postgres
-  volumes:
-    - /var/lib/postgresql
-
 postgresql:
   restart: always
   image: postgres
-  volumes_from:
-    - data
+  volumes:
+    - data:/var/lib/postgresql
   ports:
     - "5432:5432"

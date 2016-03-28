@@ -1,5 +1,6 @@
 Flask
 Flask-Bootstrap
+Flask-Moment
 Flask-SQLAlchemy
 Flask-WTF
 Sphinx

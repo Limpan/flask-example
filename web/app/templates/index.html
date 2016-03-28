@@ -1,11 +1,26 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{% block container %}
-<h1>Example application</h1>
-<p>Maybe we should do something?</p>
+{% block page_content %}
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <h1>Example application</h1>
+    <p>This is a very simple application that lets you write messages and read whats already been written.</p>
+    <div class="well">
+      {{ wtf.quick_form(form) }}
+    </div>
+  </div>
+</div>
 
-{% for user in users %}
-<p>{{ user.nickname }}</p>
-{% endfor %}
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div>
+      {% for post in posts %}
+      <p>{{ post.body }}</br>
+      <small><i>{{ moment(post.timestamp).fromNow() }}</i></small></p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 
 {% endblock %}
