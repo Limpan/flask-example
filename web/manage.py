@@ -1,66 +1,71 @@
 #!/usr/bin/env python3
-import click
+import os
 
+from app import create_app, db, models
+from flask_script import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand
+
+
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+manager = Manager(app)
+migrate = Migrate(app, db)
 
 APP_FOLDER = 'app'
 
 
-@click.group()
-def cli():  # NOQA
-    pass
+# Implement manage.py shell
+def make_shell_context():  # noqa
+    return dict(app=app, db=db, models=models)
+
+manager.add_command('shell', Shell(make_context=make_shell_context))
+manager.add_command('db', MigrateCommand)
 
 
-@cli.command()
-@click.option('--coverage', 'with_coverage', is_flag=True)
-@click.option('--no-html', is_flag=True)
-@click.option('--no-report', is_flag=True)
-def test(with_coverage, no_html, no_report):
+@manager.command
+def test(coverage=False, html=True, report=True):
     """Run the tests."""
-    if with_coverage:
+    if coverage:
         # Initialize coverage.py.
         import coverage
-        COV = coverage.coverage(branch=True,
-                                source=[APP_FOLDER])
+        COV = coverage.coverage(branch=True, source=[APP_FOLDER])
         COV.start()
 
     # Run all unit tests found in tests folder.
     import pytest
     exit_code = pytest.main(['-v', 'tests'])
 
-    if with_coverage:
+    if coverage:
         # Sum up the results of the code coverage analysis.
         COV.stop()
         COV.save()
 
-        if not no_html:
+        if not html:
             # Generate HTML report and move to tmp directory.
             import os
             basedir = os.path.abspath(os.path.dirname(__file__))
             covdir = os.path.join(basedir, 'tmp/coverage')
             COV.html_report(directory=covdir)
 
-        if not no_report:
+        if not report:
             # Show the report and clean up.
-            click.echo('\nCoverage Summary\n{}'.format('=' * 70))
+            print('\nCoverage Summary\n{}'.format('=' * 70))
             COV.report()
             COV.erase()
 
     raise SystemExit(exit_code)
 
 
-@cli.command()
-@click.option('--all', is_flag=True)
-@click.option('--stats', is_flag=True)
-def lint(all, stats):
+@manager.command
+def lint(all=False, stats=False):
     """Run the linter."""
     from flake8 import main as flake8
     import sys
 
     if all:
-        click.echo('Running linter (including skeleton code).')
+        print('Running linter (including skeleton code).')
         sys.argv = ['flake8', '.']
     else:
-        click.echo('Running Linter...')
+        print('Running Linter...')
         sys.argv = ['flake8', APP_FOLDER]
 
     if stats:
@@ -69,28 +74,14 @@ def lint(all, stats):
     flake8.main()
 
 
-# TODO: Implement manage.py runserver
-@cli.command()
-def runserver():
-    import os
-    from app import create_app
+@manager.command
+def deploy():
+    """Run deployment tasks."""
+    from flask_migrate import upgrade
 
-    app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-    app.run(host='0.0.0.0', port=8000)
-
-
-# TODO: Implement manage.py shell
-@cli.command()
-def shell():
-    pass
-
-
-try:
-    from database import db
-    cli.add_command(db)
-except ImportError:
-    pass
+    # Migrate database to latest revision
+    upgrade()
 
 
 if __name__ == "__main__":
-    cli()
+    manager.run()
