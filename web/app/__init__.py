@@ -2,7 +2,6 @@ from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask_alembic import Alembic
 from config import config
 
 
